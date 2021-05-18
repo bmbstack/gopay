@@ -1,20 +1,20 @@
 package wx
 
 import (
-	"sort"
-	"crypto/md5"
-	"encoding/hex"
 	"crypto/hmac"
+	"crypto/md5"
 	"crypto/sha256"
-	"strings"
-	"errors"
-	"io/ioutil"
 	"crypto/tls"
-	"net/http"
-	"strconv"
-	. "github.com/bmbstack/gopay/common"
+	"encoding/hex"
 	"encoding/xml"
+	"errors"
 	"fmt"
+	. "github.com/bmbstack/gopay/common"
+	"io/ioutil"
+	"net/http"
+	"sort"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -103,15 +103,29 @@ func (client *WxClient) Order(chargeParam *ChargeParam) (*ChargeObject, error) {
 	}
 	object.ChargeParam = chargeParam
 
-	wxPayParam := map[string]string{
-		"appid":     client.AppID,
-		"partnerid": client.MchID,
-		"prepayid":  respObject.PrepayID,
-		"package":   "Sign=WXPay",
-		"noncestr":  NonceStr(),
-		"timestamp": strconv.FormatInt(time.Now().Unix(), 10),
+	wxPayParam := make(map[string]string)
+	if strings.EqualFold(chargeParam.PayChannel, PayChannelWxJsapi) {
+		wxPayParam = map[string]string{
+			"appId":     client.AppID,
+			"timeStamp": strconv.FormatInt(time.Now().Unix(), 10),
+			"nonceStr":  NonceStr(),
+			"package":   fmt.Sprintf("prepay_id=%s", respObject.PrepayID),
+			"signType":  client.SignType,
+		}
+		wxPayParam["paySign"] = client.sign(wxPayParam)
+	} else if strings.EqualFold(chargeParam.PayChannel, PayChannelWxApp) {
+		wxPayParam = map[string]string{
+			"appid":     client.AppID,
+			"partnerid": client.MchID,
+			"prepayid":  respObject.PrepayID,
+			"package":   "Sign=WXPay",
+			"noncestr":  NonceStr(),
+			"timestamp": strconv.FormatInt(time.Now().Unix(), 10),
+		}
+		wxPayParam["sign"] = client.sign(wxPayParam)
+	} else {
+		// nothing
 	}
-	wxPayParam["sign"] = client.sign(wxPayParam)
 
 	object.PayParam = Marshal(wxPayParam)
 	return object, nil

@@ -1,5 +1,7 @@
 package common
 
+import "time"
+
 // Pay channel
 
 const (
@@ -78,8 +80,9 @@ type OrderQueryParam struct {
 
 // OrderQueryObject
 type OrderQueryObject struct {
-	OrderID string `json:"orderID,omitempty"` // 本地订单号
-	Status  int64  `json:"status,omitempty"`  // 支付状态， 0: 等待下单, 1: 下单成功, 2: 未支付, 3: 用户支付中, 4: 支付成功, 5: 支付失败, 6: 转入退款, 7: 退款中, 8: 退款成功, 9: 退款失败, 10: 订单已关闭, 默认为0
+	OrderID string     `json:"orderID,omitempty"`   // 本地订单号
+	Status  int64      `json:"status,omitempty"`    // 支付状态， 0: 等待下单, 1: 下单成功, 2: 未支付, 3: 用户支付中, 4: 支付成功, 5: 支付失败, 6: 转入退款, 7: 退款中, 8: 退款成功, 9: 退款失败, 10: 订单已关闭, 默认为0
+	PayTime *time.Time `json:"wxPayTime,omitempty"` // 支付时间
 
 	ThirdOrderID  string `json:"thirdOrderID,omitempty"`  // 第三方订单单号(微信，支付宝)
 	ThirdOrderFee int64  `json:"thirdOrderFee,omitempty"` // 第三方订单金额，单位：分(微信，支付宝)

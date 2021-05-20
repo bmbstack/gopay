@@ -1,25 +1,25 @@
 package alipay
 
 import (
-	"crypto/rsa"
-	. "github.com/bmbstack/gopay/common"
-	"fmt"
-	"sort"
-	"strings"
-	"crypto/sha1"
-	"crypto/rand"
 	"crypto"
-	"net/url"
-	"encoding/base64"
+	"crypto/rand"
+	"crypto/rsa"
+	"crypto/sha1"
 	"crypto/sha256"
 	"crypto/x509"
-	"errors"
-	"time"
-	"net/http"
-	"io/ioutil"
+	"encoding/base64"
 	"encoding/json"
-	"strconv"
 	"encoding/pem"
+	"errors"
+	"fmt"
+	. "github.com/bmbstack/gopay/common"
+	"io/ioutil"
+	"net/http"
+	"net/url"
+	"sort"
+	"strconv"
+	"strings"
+	"time"
 )
 
 var clients map[string]*AlipayClient
@@ -154,6 +154,7 @@ func (client *AlipayClient) OrderQuery(orderQueryParam *OrderQueryParam) (*Order
 	object := &OrderQueryObject{
 		OrderID:         respObject.AlipayTradeQuery.OutTradeNo,
 		Status:          mapTradeStateToStatus[respObject.AlipayTradeQuery.TradeStatus],
+		PayTime:         GetAliPayTime(respObject.AlipayTradeQuery.SendPayDate),
 		ThirdOrderID:    respObject.AlipayTradeQuery.TradeNo,
 		ThirdOrderFee:   thirdOrderAmount * 100, // 元=>分
 		OrderQueryParam: orderQueryParam,

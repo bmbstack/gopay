@@ -1,25 +1,25 @@
 package common
 
 import (
+	"bytes"
+	"crypto/tls"
+	"encoding/json"
+	"encoding/pem"
+	"fmt"
+	"golang.org/x/crypto/pkcs12"
+	"net/url"
 	"reflect"
-	"strings"
 	"runtime"
 	"strconv"
+	"strings"
 	"time"
-	"crypto/tls"
-	"golang.org/x/crypto/pkcs12"
-	"fmt"
-	"encoding/pem"
-	"bytes"
-	"encoding/json"
-	"net/url"
 )
 
 const (
 	DateShortLayout            = "2006-01-02"
 	DateFullLayout             = "2006-01-02 15:04:05"
 	DateFullLayoutWithoutSplit = "20060102150405"
-	TimeLocationName           = "Asia/Chongqing"
+	TimeLocationName           = "Asia/Shanghai"
 )
 
 // GetTypeName returns a string representing the name of the object typ.
@@ -192,4 +192,24 @@ func MapToUrlValues(params map[string]string) url.Values {
 		values.Add(key, fmt.Sprintf(value))
 	}
 	return values
+}
+
+// GetWxPayTime 获取微信支付时间 格式为yyyyMMddHHmmss
+func GetWxPayTime(timeEnd string) *time.Time {
+	var payTime time.Time
+	if IsNotEmpty(timeEnd) {
+		location, _ := time.LoadLocation(TimeLocationName)
+		payTime, _ = time.ParseInLocation(DateFullLayoutWithoutSplit, timeEnd, location)
+	}
+	return &payTime
+}
+
+// GetAliPayTime 获取支付宝支付时间 格式为yyyy-MM-dd HH:mm:ss 2006-01-02 15:04:05
+func GetAliPayTime(timeEnd string) *time.Time {
+	var payTime time.Time
+	if IsNotEmpty(timeEnd) {
+		location, _ := time.LoadLocation(TimeLocationName)
+		payTime, _ = time.ParseInLocation(DateFullLayout, timeEnd, location)
+	}
+	return &payTime
 }

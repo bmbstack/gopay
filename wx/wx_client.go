@@ -165,6 +165,7 @@ func (client *WxClient) OrderQuery(orderQueryParam *OrderQueryParam) (*OrderQuer
 	object := &OrderQueryObject{
 		OrderID:         respObject.OutTradeNO,
 		Status:          mapTradeStateToStatus[respObject.TradeState],
+		PayTime:         GetWxPayTime(respObject.TimeEnd),
 		ThirdOrderID:    respObject.TransactionID,
 		ThirdOrderFee:   respObject.TotalFee,
 		OrderQueryParam: orderQueryParam,

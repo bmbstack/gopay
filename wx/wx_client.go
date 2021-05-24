@@ -191,7 +191,8 @@ func (client *WxClient) Refund(refundParam *RefundParam) (*RefundObject, error) 
 	params["notify_url"] = refundParam.CallbackURL                      // 【非必传】回调地址，如果不传使用微信商户后台的url
 	params = client.appendBasicParams(params)
 
-	xmlStr, err := client.postWithXml(false, requestUrl, params)
+	// 微信支付接口中，涉及资金回滚的接口会使用到API证书，包括退款、撤销接口。
+	xmlStr, err := client.postWithXml(true, requestUrl, params)
 	if err != nil {
 		return nil, err
 	}

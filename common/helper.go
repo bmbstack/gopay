@@ -146,12 +146,12 @@ func MapToXml(params map[string]string) string {
 	return buf.String()
 }
 
-// 用时间戳生成随机字符串
+// NonceStr 用时间戳生成随机字符串
 func NonceStr() string {
 	return strconv.FormatInt(time.Now().UTC().UnixNano(), 10)
 }
 
-// 将Pkcs12转成Pem
+// Pkcs12ToPem 将Pkcs12转成Pem
 func Pkcs12ToPem(p12 []byte, password string) tls.Certificate {
 	blocks, err := pkcs12.ToPEM(p12, password)
 

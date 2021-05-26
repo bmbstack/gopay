@@ -49,7 +49,7 @@ func GetWxClient(key string) *WxClient {
 	return value
 }
 
-// 统一下单
+// Order 统一下单
 func (client *WxClient) Order(chargeParam *ChargeParam) (*ChargeObject, error) {
 	var requestUrl string
 	if client.IsSandbox {
@@ -131,7 +131,7 @@ func (client *WxClient) Order(chargeParam *ChargeParam) (*ChargeObject, error) {
 	return object, nil
 }
 
-// 订单查询
+// OrderQuery 订单查询
 func (client *WxClient) OrderQuery(orderQueryParam *OrderQueryParam) (*OrderQueryObject, error) {
 	var requestUrl string
 	if client.IsSandbox {
@@ -173,7 +173,7 @@ func (client *WxClient) OrderQuery(orderQueryParam *OrderQueryParam) (*OrderQuer
 	return object, nil
 }
 
-// 退款
+// Refund 退款
 func (client *WxClient) Refund(refundParam *RefundParam) (*RefundObject, error) {
 	var requestUrl string
 	if client.IsSandbox {
@@ -223,7 +223,7 @@ func (client *WxClient) Refund(refundParam *RefundParam) (*RefundObject, error) 
 	return object, nil
 }
 
-// 退款查询
+// RefundQuery 退款查询
 func (client *WxClient) RefundQuery(refundQueryParam *RefundQueryParam) (*RefundQueryObject, error) {
 	var requestUrl string
 	if client.IsSandbox {
@@ -253,11 +253,24 @@ func (client *WxClient) RefundQuery(refundQueryParam *RefundQueryParam) (*Refund
 		return nil, errors.New(respObject.ErrCodeDes)
 	}
 
+	var orderRefundStatus = OrderRefunding
+	if respObject.RefundStatus0 == "SUCCESS" {
+		orderRefundStatus = OrderRefundSuccess
+	} else if respObject.RefundStatus0 == "PROCESSING" {
+		orderRefundStatus = OrderRefunding
+	} else if respObject.RefundStatus0 == "CHANGE" {
+		orderRefundStatus = OrderRefundFail
+	} else if respObject.RefundStatus0 == "REFUNDCLOSE" {
+		orderRefundStatus = OrderRefundFail
+	} else {
+		// nothing
+	}
+
 	// RefundQueryObject
 	object := &RefundQueryObject{
 		OrderID:          respObject.OutTradeNO,
 		RefundID:         respObject.OutRefundNo0,
-		Status:           OrderRefunding,
+		Status:           int64(orderRefundStatus),
 		ThirdOrderID:     respObject.TransactionID,
 		ThirdOrderFee:    respObject.TotalFee,
 		ThirdRefundID:    respObject.RefundID0,

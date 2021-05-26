@@ -59,7 +59,7 @@ func GetAlipayClient(key string) *AlipayClient {
 	return value
 }
 
-// 下单(生成支付参数) https://docs.open.alipay.com/api_1/alipay.trade.app.pay
+// Order 下单(生成支付参数) https://docs.open.alipay.com/api_1/alipay.trade.app.pay
 func (client *AlipayClient) Order(chargeParam *ChargeParam) (*ChargeObject, error) {
 	var requestUrl string
 	if client.IsSandbox {
@@ -123,7 +123,7 @@ func (client *AlipayClient) Order(chargeParam *ChargeParam) (*ChargeObject, erro
 	return object, nil
 }
 
-// 订单查询 https://docs.open.alipay.com/api_1/alipay.trade.query
+// OrderQuery 订单查询 https://docs.open.alipay.com/api_1/alipay.trade.query
 func (client *AlipayClient) OrderQuery(orderQueryParam *OrderQueryParam) (*OrderQueryObject, error) {
 	var requestUrl string
 	if client.IsSandbox {
@@ -162,7 +162,7 @@ func (client *AlipayClient) OrderQuery(orderQueryParam *OrderQueryParam) (*Order
 	return object, nil
 }
 
-// 退款 https://docs.open.alipay.com/api_1/alipay.trade.refund
+// Refund 退款 https://docs.open.alipay.com/api_1/alipay.trade.refund
 func (client *AlipayClient) Refund(refundParam *RefundParam) (*RefundObject, error) {
 	var requestUrl string
 	if client.IsSandbox {
@@ -210,7 +210,7 @@ func (client *AlipayClient) Refund(refundParam *RefundParam) (*RefundObject, err
 	return object, nil
 }
 
-// 退款查询 https://docs.open.alipay.com/api_1/alipay.trade.fastpay.refund.query
+// RefundQuery 退款查询 https://docs.open.alipay.com/api_1/alipay.trade.fastpay.refund.query
 func (client *AlipayClient) RefundQuery(refundQueryParam *RefundQueryParam) (*RefundQueryObject, error) {
 	var requestUrl string
 	if client.IsSandbox {

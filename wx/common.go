@@ -132,5 +132,5 @@ type WxRefundQueryResponse struct {
 	OutRefundNo0     string `xml:"out_refund_no_0"`              // 商户退款单号0
 	RefundID0        string `xml:"refund_id_0"`                  // 微信退款单号
 	RefundFee0       int64  `xml:"refund_fee_0"`                 // 微信退款金额
-	RefundStatus0    int64  `xml:"refund_status_0"`              // 微信退款状态
+	RefundStatus0    string `xml:"refund_status_0"`              // 微信退款状态,SUCCESS—退款成功,REFUNDCLOSE—退款关闭,PROCESSING—退款处理中,CHANGE—退款异常
 }

@@ -321,7 +321,7 @@ func (client *WxClient) postWithXml(useAppCert bool, url string, params map[stri
 
 func (client *WxClient) getHttpClient(useAppCert bool) (*http.Client, error) {
 	var hc *http.Client
-	if useAppCert { // 退款，退款查询需要app证书
+	if useAppCert { // 退款需要app证书
 		if client.ApiCertData == nil {
 			return nil, errors.New("证书数据为空")
 		}
